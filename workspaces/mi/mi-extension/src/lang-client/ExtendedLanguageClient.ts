@@ -484,7 +484,7 @@ export class ExtendedLanguageClient extends LanguageClient {
     }  
     
     async getMcpTools(req: McpToolsRequest): Promise<McpToolsResponse> {
-        return this.sendRequest("synapse/getMCPTools", { connectionName: req.connectionName });
+        return this.sendRequest("synapse/getMCPTools", { documentUri: Uri.file(req.documentUri).toString(), connectionName: req.connectionName, range: req.range });
     }
 
     async getCodeActions(params: CodeActionParams): Promise<CodeAction[]> {
