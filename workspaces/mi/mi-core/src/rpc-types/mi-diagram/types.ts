@@ -2119,11 +2119,6 @@ export interface McpToolsResponse {
     error?: string;
 }
 
-export interface McpToolsWithDescription {
-    name: string;
-    description: string;
-}
-
 export interface UpdateMediatorResponse {
     textEdits: ExtendedTextEdit[];
 }
