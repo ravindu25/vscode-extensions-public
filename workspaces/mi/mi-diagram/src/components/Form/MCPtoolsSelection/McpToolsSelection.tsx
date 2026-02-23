@@ -517,7 +517,7 @@ export const McpToolsSelection: React.FC<McpToolsSelectionProps> = ({
     useEffect(() => {
         // Retrieve mcp tools when selected connection changes
         fetchMcpTools();
-    }, [rpcClient, selectedConnection]);
+    }, [selectedConnection]);
 
     useEffect(() => {
         if (tools.length > 0 && selectedToolNames.size === 0) {

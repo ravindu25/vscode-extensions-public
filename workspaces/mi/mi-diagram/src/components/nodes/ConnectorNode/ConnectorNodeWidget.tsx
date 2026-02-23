@@ -167,15 +167,11 @@ export function ConnectorNodeWidget(props: ConnectorNodeWidgetProps) {
             }
 
             const connectorIcon = await rpcClient.getMiDiagramRpcClient().getConnectorIcon({
-                connectorName: node.stNode?.connectorName ?? (isMCPTool ? 'ai' : (node.stNode as any).mediator.connectorName),
+                connectorName: node.stNode?.connectorName ?? (node.stNode as any).mediator.connectorName,
                 documentUri: node.documentUri
             });
 
             setIconPath(connectorIcon.iconPath);
-
-            if (isMCPTool) {
-                return;
-            }
 
             const connectorData = await rpcClient.getMiDiagramRpcClient().getAvailableConnectors({
                 documentUri: node.documentUri,
