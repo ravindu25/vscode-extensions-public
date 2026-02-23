@@ -255,6 +255,7 @@ export function ConnectorNodeWidget(props: ConnectorNodeWidgetProps) {
             const connection = connectionData.connections.find((item: any) => item.name === connectionName);
 
             if (!connection) {
+                console.error(`Connection "${connectionName}" not found`);
                 return;
             }
 
