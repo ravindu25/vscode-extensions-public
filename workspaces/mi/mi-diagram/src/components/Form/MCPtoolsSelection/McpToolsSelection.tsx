@@ -18,6 +18,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useWatch } from "react-hook-form";
 import styled from "@emotion/styled";
 import { Button, CheckBox, ThemeColors, SearchBox, Codicon, Divider, Typography, Dropdown, Tooltip, Icon } from "@wso2/ui-toolkit";
 import type { OptionProps } from "@wso2/ui-toolkit";
@@ -426,7 +427,7 @@ export const McpToolsSelection: React.FC<McpToolsSelectionProps> = ({
     resolutionError = "",
     onSelectionChange,
     selectedConnection,
-    control: _control,
+    control,
     setValue,
     getValues,
     setError: setFormError,
@@ -442,13 +443,13 @@ export const McpToolsSelection: React.FC<McpToolsSelectionProps> = ({
     const { rpcClient } = useVisualizerContext();
     
     // Convert McpTool[] from form to Set<string> for display
+    const mcpToolsSelection = useWatch({ control, name: 'mcpToolsSelection' });
     const selectedToolNames = useMemo(() => {
-        const currentSelection = getValues('mcpToolsSelection');
-        if (Array.isArray(currentSelection)) {
-            return new Set(currentSelection.map((tool: McpTool) => tool.name));
+        if (Array.isArray(mcpToolsSelection)) {
+            return new Set(mcpToolsSelection.map((tool: McpTool) => tool.name));
         }
         return new Set<string>();
-    }, [getValues('mcpToolsSelection')]);
+    }, [mcpToolsSelection]);
 
     useEffect(() => {
         if (error) {
