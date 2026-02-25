@@ -42,14 +42,19 @@ const BEDROCK_MODEL_MAP: Record<string, string> = {
  * Cross-region inference requires a regional prefix (e.g., us., eu.).
  */
 export const getBedrockRegionalPrefix = (region: string): string => {
-    if (region.startsWith('us-')) {
-        return 'us';
-    } else if (region.startsWith('eu-')) {
-        return 'eu';
-    } else if (region.startsWith('ap-')) {
-        return 'ap';
+    const prefix = region.split('-')[0];
+    switch (prefix) {
+        case 'us':
+        case 'eu':
+        case 'ap':
+        case 'ca':
+        case 'sa':
+        case 'me':
+        case 'af':
+            return prefix;
+        default:
+            return 'us';
     }
-    return 'us'; // default
 };
 
 let cachedAnthropic: ReturnType<typeof createAnthropic> | null = null;
