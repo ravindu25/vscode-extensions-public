@@ -470,9 +470,9 @@ const checkWorkspaceAndToken = async (): Promise<{ workspaceSupported: boolean; 
             tokenData = { token: apiKey, loginMethod: LoginMethod.ANTHROPIC_KEY };
         }
     } else if (credentials?.loginMethod === LoginMethod.AWS_BEDROCK) {
-        const accessKeyId = (credentials.secrets as { accessKeyId?: string })?.accessKeyId;
-        if (accessKeyId) {
-            tokenData = { token: accessKeyId, loginMethod: LoginMethod.AWS_BEDROCK };
+        const secrets = credentials.secrets as { accessKeyId?: string; secretAccessKey?: string; region?: string };
+        if (secrets.accessKeyId && secrets.secretAccessKey && secrets.region) {
+            tokenData = { token: secrets.accessKeyId, loginMethod: LoginMethod.AWS_BEDROCK };
         }
     }
 
@@ -546,11 +546,11 @@ const getTokenAndLoginMethod = async () => {
     }
 
     if (credentials.loginMethod === LoginMethod.AWS_BEDROCK) {
-        const accessKeyId = (credentials.secrets as { accessKeyId?: string })?.accessKeyId;
-        if (!accessKeyId) {
-            throw new Error('No authentication credentials found');
+        const secrets = credentials.secrets as { accessKeyId?: string; secretAccessKey?: string; region?: string };
+        if (!secrets.accessKeyId || !secrets.secretAccessKey || !secrets.region) {
+            throw new Error('Incomplete AWS Bedrock credentials. Please log in again.');
         }
-        return { token: accessKeyId, loginMethod: LoginMethod.AWS_BEDROCK };
+        return { token: secrets.accessKeyId, loginMethod: LoginMethod.AWS_BEDROCK };
     }
 
     throw new Error('No authentication credentials found');
