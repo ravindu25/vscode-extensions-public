@@ -280,7 +280,10 @@ export const getAnthropicProvider = async (): Promise<ReturnType<typeof createAn
 /**
  * Get or create a cached Bedrock provider instance.
  */
-const getBedrockProvider = async (): Promise<ReturnType<typeof createAmazonBedrock>> => {
+const getBedrockProvider = async (): Promise<{
+    provider: ReturnType<typeof createAmazonBedrock>;
+    credentials: Awaited<ReturnType<typeof getAwsBedrockCredentials>> & {};
+}> => {
     const credentials = await getAwsBedrockCredentials();
     if (!credentials) {
         throw new Error("Authentication failed: Unable to get AWS Bedrock credentials");
@@ -294,18 +297,14 @@ const getBedrockProvider = async (): Promise<ReturnType<typeof createAmazonBedro
         sessionToken: credentials.sessionToken,
     });
 
-    return cachedBedrock;
+    return { provider: cachedBedrock, credentials };
 };
 
 export const getAnthropicClient = async (model: AnthropicModel): Promise<any> => {
     const loginMethod = await getLoginMethod();
 
     if (loginMethod === LoginMethod.AWS_BEDROCK) {
-        const bedrockProvider = await getBedrockProvider();
-        const credentials = await getAwsBedrockCredentials();
-        if (!credentials) {
-            throw new Error("Authentication failed: Unable to get AWS Bedrock credentials");
-        }
+        const { provider: bedrockProvider, credentials } = await getBedrockProvider();
         const regionalPrefix = getBedrockRegionalPrefix(credentials.region);
         const bedrockModelId = BEDROCK_MODEL_MAP[model];
         if (!bedrockModelId) {
